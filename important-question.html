@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Do you think I'm attractive?</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .hidden { display: none; }
+        .response-message { font-size: 2.5rem; } /* Increase the font size here */
+    </style>
+</head>
+<body class="bg-pink-100 flex items-center justify-center min-h-screen">
+    <div class="text-center">
+        <div id="gif-container">
+            <img id="main-gif" src="https://media.giphy.com/media/l0HUpt2s9Pclgt9Vm/giphy.gif" alt="Cute GIF" class="mx-auto mb-4">
+        </div>
+        <h1 id="question" class="text-2xl font-bold mb-4">Do you think I'm attractive?</h1>
+        <div id="buttons">
+            <button id="yes-btn" class="bg-green-500 text-white py-2 px-4 rounded-full mx-2 transition transform hover:scale-105">Yes</button>
+            <button id="no-btn" class="bg-red-500 text-white py-2 px-4 rounded-full mx-2 transition transform hover:scale-105">No</button>
+        </div>
+        <div id="response-message" class="response-message text-xl font-bold mt-4 hidden"></div>
+    </div>
+
+    <script>
+        const noButtonTexts = [
+           "No", "Naah","Think Again", "you sure?", "come on !", "you hidin something?",
+            "I know ur blushing", "I can see your Smile", "Say it now Pookie", "Almost there", "click on yes Pookie", "You Lying!"
+        ];
+        let noClickCount = 0;
+
+        document.getElementById('yes-btn').addEventListener('click', function() {
+            document.getElementById('main-gif').src = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2cxNDRlbjBpcGRwcnlrNjVvZTNveTFxdXJ3aHl1M241ZDh0OTkyNSZlcD12MV9pbnRlcm5naWZfYnlfaWQmY3Q9Zw/TeW96UVuY0jmhNMEej/giphy.webp";
+            document.getElementById('question').classList.add('hidden');
+            document.getElementById('buttons').classList.add('hidden');
+            document.getElementById('response-message').innerText = "I knew you were hitting on me!";
+            document.getElementById('response-message').classList.remove('hidden');
+            confettiAnimation();
+        });
+
+        document.getElementById('no-btn').addEventListener('click', function() {
+            noClickCount++;
+            document.getElementById('main-gif').src = "https://media.giphy.com/media/l4pTfx2qLszoacZRS/giphy.gif";
+
+            if (noClickCount <= 10) {
+                this.innerText = noButtonTexts[noClickCount - 1];
+            } else {
+                this.innerText = noButtonTexts[10];
+                moveButtonRandomly(this);
+            }
+        });
+
+        function moveButtonRandomly(button) {
+            // Move the button to a random position on the screen
+            const randomX = Math.random() * (window.innerWidth - button.offsetWidth);
+            const randomY = Math.random() * (window.innerHeight - button.offsetHeight);
+            button.style.position = 'absolute';
+            button.style.left = `${randomX}px`;
+            button.style.top = `${randomY}px`;
+        }
+
+        function confettiAnimation() {
+            // Basic confetti animation
+            const duration = 5 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                const particleCount = 50 * (timeLeft / duration);
+                // Since particles fall down, start a bit higher than random
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</body>
+</html>
